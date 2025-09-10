@@ -95,9 +95,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_no_content_when_delete_id_found() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
-        Company company = companyController.createCompany(spring);
+        Company company = createDefaultCompany();
 
         MockHttpServletRequestBuilder request = delete("/companies/" + company.getId())
                 .contentType(MediaType.APPLICATION_JSON);
