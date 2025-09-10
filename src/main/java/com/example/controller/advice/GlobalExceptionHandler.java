@@ -1,5 +1,6 @@
 package com.example.controller.advice;
 
+import com.example.exception.DeActiveCompanyException;
 import com.example.exception.DeActiveEmployeeException;
 import com.example.exception.InvalidAgeEmployeeException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DeActiveEmployeeException.class)
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ResponseException handleDeActiveEmployeeException(Exception e){
+        return new ResponseException(e.getMessage());
+    }
+
+    @ExceptionHandler(DeActiveCompanyException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ResponseException handleDeActiveCompanyException(Exception e){
         return new ResponseException(e.getMessage());
     }
 }

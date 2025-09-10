@@ -154,4 +154,15 @@ public class CompanyControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void should_status_5xx_when_delete_company_by_active_was_false() throws Exception {
+        Company company = createDefaultCompany();
+        mockMvc.perform(delete("/companies/" + company.getId())
+                .contentType(MediaType.APPLICATION_JSON));
+
+        mockMvc.perform(delete("/companies/" + company.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadGateway());
+    }
 }
