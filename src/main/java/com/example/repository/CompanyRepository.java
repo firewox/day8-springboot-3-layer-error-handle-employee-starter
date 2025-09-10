@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import com.example.demo.Company;
+import com.example.demo.Employee;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,5 +35,16 @@ public class CompanyRepository {
                 .filter(employee -> employee.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public Company updateCompany(int id, Company updatedCompany) {
+        for (Company company : companies) {
+            if (company.getId() == id) {
+                company.setName(updatedCompany.getName());
+                company.setActive(updatedCompany.getActive());
+                return company;
+            }
+        }
+        return null;
     }
 }

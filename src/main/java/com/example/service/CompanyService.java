@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.demo.Company;
 import com.example.demo.Employee;
+import com.example.exception.DeActiveEmployeeException;
 import com.example.repository.CompanyRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,16 @@ public class CompanyService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
         }
         return companyById;
+    }
+
+    public Company updateCompany(int id, Company updatedCompany) {
+        Company found = getCompanyById(id);
+        if (found == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
+        }
+        if (!Boolean.TRUE.equals(found.getActive())) {
+            throw new DeActiveEmployeeException("Company was deleted");
+        }
+        return companyRepository.updateCompany(id, updatedCompany);
     }
 }
