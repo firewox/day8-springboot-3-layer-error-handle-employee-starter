@@ -51,4 +51,13 @@ public class CompanyService {
         }
         return companyRepository.updateCompany(id, updatedCompany);
     }
+
+    public void deleteCompany(int id) {
+        Company found =  this.getCompanyById(id);
+        if (found == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
+        }
+        found.setActive(false);
+        this.companyRepository.updateCompany(found.getId(), found);
+    }
 }
