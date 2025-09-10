@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,18 +29,34 @@ public class EmployeeControllerTest {
 //        e.setSalary(salary);
 //        return e;
 //    }
-//
-//    private static Employee johnSmith() {
-//        return employee("John Smith", 28, "MALE", 60000.0);
-//    }
-//
-//    private static Employee janeDoe() {
-//        return employee("Jane Doe", 22, "FEMALE", 60000.0);
-//    }
+
+    private Employee createJohnSmith() throws Exception {
+        Gson gson = new Gson();
+        Employee john = new Employee(null, "John Smith", 28, "MALE", 60000.0);
+        String johnString = gson.toJson(john).toString();
+
+        String contentAsString = mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON).content(johnString)).andReturn().getResponse().getContentAsString();
+        john.setId(gson.fromJson(contentAsString, Employee.class).getId());
+        return john;
+    }
+
+    private Employee createJaneDoe() throws Exception {
+        Gson gson = new Gson();
+        Employee jane = new Employee(null, "Jane Doe", 22, "FEMALE", 60000.0);
+        String janeString = gson.toJson(jane).toString();
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON).content(janeString)).andReturn().getResponse().getContentAsString();
+        String contentAsStringJane = mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON).content(janeString)).andReturn().getResponse().getContentAsString();
+        jane.setId(gson.fromJson(contentAsStringJane, Employee.class).getId());
+        return jane;
+    }
 
     @BeforeEach
-    void cleanEmployees() {
-//        employeeController.empty();
+    void cleanEmployees() throws Exception {
+        mockMvc.perform(delete("/employees/all")
+                .contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -50,15 +68,8 @@ public class EmployeeControllerTest {
 
     @Test
     void should_return_all_employee() throws Exception {
-//        employeeController.createEmployee(johnSmith());
-//        employeeController.createEmployee(janeDoe());
-        Gson gson = new Gson();
-        String john = gson.toJson(new Employee(1, "John Smith", 28, "MALE", 60000.0)).toString();
-        String jane = gson.toJson(new Employee(2, "Jane Doe", 22, "FEMALE", 60000.0)).toString();
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON).content(john));
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON).content(jane));
+        createJohnSmith();
+        createJaneDoe();
         mockMvc.perform(get("/employees")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
