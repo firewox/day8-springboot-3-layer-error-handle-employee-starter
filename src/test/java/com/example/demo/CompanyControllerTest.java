@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.controller.CompanyController;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,17 @@ public class CompanyControllerTest {
         companyController.empty();
     }
 
+    private Company createDefaultCompany() throws Exception {
+        Gson gson = new Gson();
+        Company company = new Company(null, "Spring",null);
+        String companyString = gson.toJson(company);
+
+        String contentAsString = mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON).content(companyString)).andReturn().getResponse().getContentAsString();
+        company.setId(gson.fromJson(contentAsString, Company.class).getId());
+        return company;
+    }
+
     @Test
     void should_return_created_company_when_post_companies() throws Exception {
         String requestBody = """
@@ -47,9 +59,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_all_companies_when_no_param() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
-        companyController.createCompany(spring);
+        Company spring = createDefaultCompany();
 
         mockMvc.perform(get("/companies").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
