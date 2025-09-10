@@ -49,19 +49,13 @@ public class CompanyController {
 //        }
 //        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
 //    }
-//
-//    @GetMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Company getCompanyById(@PathVariable int id) {
-//        return this.companyService.getCompanyById(id);
-//        for (Company c : companies) {
-//            if (c.getId().equals(id)) {
-//                return c;
-//            }
-//        }
-//        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
-//    }
-//
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Company getCompanyById(@PathVariable int id) {
+        return this.companyService.getCompanyById(id);
+    }
+
 //    @DeleteMapping("/{id}")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public void deleteCompany(@PathVariable int id) {
