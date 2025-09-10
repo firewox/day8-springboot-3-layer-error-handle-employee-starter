@@ -89,22 +89,22 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.gender").value(expect.getGender()))
                 .andExpect(jsonPath("$.salary").value(expect.getSalary()));
     }
-//
-//    @Test
-//    void should_return_male_employee_when_employee_found() throws Exception {
-//        Employee expect = employeeController.createEmployee(johnSmith());
-//        employeeController.createEmployee(janeDoe());
-//
-//        mockMvc.perform(get("/employees?gender=male")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].id").value(expect.getId()))
-//                .andExpect(jsonPath("$[0].name").value(expect.getName()))
-//                .andExpect(jsonPath("$[0].age").value(expect.getAge()))
-//                .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
-//                .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
-//    }
-//
+
+    @Test
+    void should_return_male_employee_when_employee_found() throws Exception {
+        Employee expect = createJohnSmith();
+        Employee janeDoe = createJaneDoe();
+
+        mockMvc.perform(get("/employees?gender=male")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(expect.getId()))
+                .andExpect(jsonPath("$[0].name").value(expect.getName()))
+                .andExpect(jsonPath("$[0].age").value(expect.getAge()))
+                .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
+                .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
+    }
+
 //    @Test
 //    void should_create_employee() throws Exception {
 //        String requestBody = """
