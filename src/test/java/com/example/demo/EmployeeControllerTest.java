@@ -106,6 +106,28 @@ public class EmployeeControllerTest {
     }
 
     @Test
+    void should_create_employee() throws Exception {
+        String requestBody = """
+                        {
+                            "name": "John Smith",
+                            "age": 28,
+                            "gender": "MALE",
+                            "salary": 60000
+                        }
+                """;
+
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("John Smith"))
+                .andExpect(jsonPath("$.age").value(28))
+                .andExpect(jsonPath("$.gender").value("MALE"))
+                .andExpect(jsonPath("$.salary").value(60000));
+    }
+
+    @Test
     void should_return_200_with_empty_body_when_no_employee() throws Exception {
         mockMvc.perform(get("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
