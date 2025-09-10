@@ -61,6 +61,9 @@ public class Employee {
         this.active = active;
     }
 
+    public Employee() {
+    }
+
     @Override
     public String toString() {
         return "Employee{" +

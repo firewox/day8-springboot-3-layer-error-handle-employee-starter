@@ -40,38 +40,28 @@ public class EmployeeService {
         } else if (employee.getAge() > 30 && employee.getSalary() < 20000) {
             throw new InvalidAgeEmployeeException("Salary must be greater than 20000.0");
         }
+        employee.setActive(true);
         return employeeRepository.createEmployee(employee);
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-        if (updatedEmployee.getActive() == false) {
-            throw new DeActiveEmployeeException("Employee is not active");
-        }
-        Employee found = null;
-        for (Employee e : this.getEmployees(null, null, null)) {
-            if (Objects.equals(e.getId(), id)) {
-                found = e;
-                break;
-            }
-        }
+        Employee found = this.getEmployeeById(id);
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
+        }
+        if (!Boolean.TRUE.equals(found.getActive())) {
+            throw new DeActiveEmployeeException("Employee left company");
         }
         return employeeRepository.updateEmployee(id, updatedEmployee);
     }
 
     public void deleteEmployee(int id) {
-        Employee found = null;
-        for (Employee e : this.getEmployees(null, null, null)) {
-            if (e.getId() == id) {
-                found = e;
-                break;
-            }
-        }
+        Employee found =  this.getEmployeeById(id);
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
-        this.employeeRepository.deleteEmployee(found);
+        found.setActive(false);
+        this.employeeRepository.updateEmployee(found.getId(), found);
     }
 
     public void empty() {

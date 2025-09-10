@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import com.example.exception.InvalidAgeEmployeeException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,9 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -201,6 +197,21 @@ public class EmployeeControllerTest {
         String requestBody = """
                             {
                                 "name": "John Smith",
+                                "age": 31,
+                                "gender": "MALE",
+                                "salary": 5000.0
+                            }
+                    """;
+
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_return_employee_with_status_active_when_create_an_employee() throws Exception {
+        String requestBody = """
+                            {
+                                "name": "John Smith",
                                 "age": 29,
                                 "gender": "MALE",
                                 "salary": 65000.0
@@ -208,6 +219,39 @@ public class EmployeeControllerTest {
                     """;
 
         mockMvc.perform(post("/employees")
-                .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().is5xxServerError());
+                .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isCreated());
     }
+
+    @Test
+    void should_return_employee_not_exist_message_when_update_an_employee() throws Exception {
+        String requestBody = """
+                            {
+                                "name": "John Smith",
+                                "age": 29,
+                                "gender": "MALE",
+                                "salary": 65000.0
+                            }
+                    """;
+        Employee johnSmith = createJohnSmith();
+        mockMvc.perform(delete("/employees/" + johnSmith.getId()));
+        mockMvc.perform(put("/employees/"+johnSmith.getId())
+                .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isBadGateway());
+    }
+
+    @Test
+    void should_return_not_found_msg_when_delete_not_exist_employee() throws Exception {
+        String requestBody = """
+                            {
+                                "name": "John Smith",
+                                "age": 29,
+                                "gender": "MALE",
+                                "salary": 65000.0
+                            }
+                    """;
+
+        mockMvc.perform(delete("/employees/"+999)
+                .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isNotFound());
+    }
+
+
 }

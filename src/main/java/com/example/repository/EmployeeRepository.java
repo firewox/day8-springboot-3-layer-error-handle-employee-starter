@@ -36,15 +36,17 @@ public class EmployeeRepository {
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-        updatedEmployee.setName(updatedEmployee.getName());
-        updatedEmployee.setAge(updatedEmployee.getAge());
-        updatedEmployee.setGender(updatedEmployee.getGender());
-        updatedEmployee.setSalary(updatedEmployee.getSalary());
-        return updatedEmployee;
-    }
-
-    public void deleteEmployee(Employee found) {
-        found.setActive(false);
+        for (Employee employee : this.getEmployees(null, null, null)) {
+            if (employee.getId() == id) {
+                employee.setName(updatedEmployee.getName());
+                employee.setAge(updatedEmployee.getAge());
+                employee.setGender(updatedEmployee.getGender());
+                employee.setSalary(updatedEmployee.getSalary());
+                employee.setActive(updatedEmployee.getActive());
+                return employee;
+            }
+        }
+        return null;
     }
 
     public void empty() {

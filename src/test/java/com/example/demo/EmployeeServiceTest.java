@@ -13,14 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class EmployeeServiceTest {
+class EmployeeServiceTest {
     @InjectMocks
     private EmployeeService employeeService;
 
@@ -59,37 +57,36 @@ public class EmployeeServiceTest {
     @Test
     void should_return_employee_status_is_deactive_when_delete_an_employee() {
         Employee currrentEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, true);
-        when(employeeRepository.getEmployees(null, null, null)).thenReturn(List.of(currrentEmployee));
-        doAnswer(invocation -> {
-            Employee employee = invocation.getArgument(0);
-            employee.setActive(false);
-            return null;
-        }).when(employeeRepository).deleteEmployee(any(Employee.class));
-        employeeService.deleteEmployee(1);
+        assertTrue(currrentEmployee.getActive());
         when(employeeRepository.getEmployeeById(1)).thenReturn(currrentEmployee);
-        assertEquals(false, employeeService.getEmployeeById(1).getActive());
+        employeeService.deleteEmployee(1);
+        verify(employeeRepository)
+                .updateEmployee(
+                        eq(1),
+                        argThat(employee -> employee.getActive() == false));
     }
 
     @Test
     void should_throw_exception_without_employee_when_delete_an_employee_not_exist() {
         Employee currrentEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, true);
         when(employeeRepository.getEmployeeById(1)).thenReturn(currrentEmployee);
-        assertThrows(ResponseStatusException.class, () -> employeeService.deleteEmployee(1));
+        assertThrows(ResponseStatusException.class, () -> employeeService.deleteEmployee(2));
     }
 
     @Test
     void should_return_updated_employee_when_employee_active_status_is_active() {
         Employee targetEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, true);
         Employee updatedEmployee = new Employee(1, "Tom", 32, "gender", 39999.0, true);
+        when(employeeRepository.getEmployeeById(1)).thenReturn(targetEmployee);
         when(employeeRepository.getEmployees(null, null, null)).thenReturn(List.of(targetEmployee));
-        when(employeeRepository.updateEmployee(any(Integer.class), any(Employee.class))).thenReturn(updatedEmployee);
-        assertEquals(updatedEmployee, employeeService.updateEmployee(1, updatedEmployee));
+        employeeService.updateEmployee(1, updatedEmployee);
+        verify(employeeRepository).updateEmployee(eq(1), any(Employee.class));
     }
 
     @Test
     void should_throw_exception_when_employee_active_status_is_deactive() {
 //        Employee targetEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, false);
         Employee updatedEmployee = new Employee(1, "Tom", 32, "gender", 39999.0, false);
-        assertThrows(DeActiveEmployeeException.class, () -> employeeService.updateEmployee(1, updatedEmployee));
+        assertThrows(ResponseStatusException.class, () -> employeeService.updateEmployee(1, updatedEmployee));
     }
 }

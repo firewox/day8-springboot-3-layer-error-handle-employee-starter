@@ -19,7 +19,6 @@ public class EmployeeController {
 
     @GetMapping
     public List<Employee> getEmployees(@RequestParam(required = false) String gender, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        System.out.println("测试");
         return this.employeeService.getEmployees(gender, page, size);
     }
 
