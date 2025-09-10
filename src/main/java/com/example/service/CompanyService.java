@@ -23,4 +23,9 @@ public class CompanyService {
         }
         return companyRepository.getCompanies();
     }
+
+    public Company createCompany(Company company) {
+        company.setActive(true);
+        return companyRepository.createCompany(company);
+    }
 }

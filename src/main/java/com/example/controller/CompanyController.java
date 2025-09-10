@@ -30,15 +30,12 @@ public class CompanyController {
         return this.companyService.getCompanies(page, size);
     }
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Company createCompany(@RequestBody Company company) {
-//        return this.companyService.createCompany(company);
-//        company.setId(1);
-//        companies.add(company);
-//        return company;
-//    }
-//
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Company createCompany(@RequestBody Company company) {
+        return this.companyService.createCompany(company);
+    }
+
 //    @PutMapping("/{id}")
 //    @ResponseStatus(HttpStatus.OK)
 //    public Company updateCompany(@PathVariable int id, @RequestBody Company updatedCompany) {

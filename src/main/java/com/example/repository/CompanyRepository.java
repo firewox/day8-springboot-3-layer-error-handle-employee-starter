@@ -22,4 +22,10 @@ public class CompanyRepository {
     public List<Company> getCompanies(Integer page, Integer size) {
         return companies.stream().skip((long) (page - 1) * size).limit(size).toList();
     }
+
+    public Company createCompany(Company company) {
+        company.setId(companies.size() + 1);
+        companies.add(company);
+        return company;
+    }
 }
