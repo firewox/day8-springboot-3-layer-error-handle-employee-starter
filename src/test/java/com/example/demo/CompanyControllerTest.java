@@ -145,4 +145,13 @@ public class CompanyControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void should_status_404_when_delete_company_by_id_not_found() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/companies/999")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+    }
 }
