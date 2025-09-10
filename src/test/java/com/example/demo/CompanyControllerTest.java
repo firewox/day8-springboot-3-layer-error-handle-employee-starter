@@ -68,9 +68,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_company_when_get_id_found() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
-        Company company = companyController.createCompany(spring);
+        Company company = createDefaultCompany();
 
         MockHttpServletRequestBuilder request = get("/companies/" + company.getId())
                 .contentType(MediaType.APPLICATION_JSON);
