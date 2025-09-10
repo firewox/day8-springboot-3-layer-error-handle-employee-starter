@@ -106,14 +106,14 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_truncated_companies_when_page_size_is_limit() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
+        Company company = createDefaultCompany();
+        companyController.createCompany(company);
+        companyController.createCompany(company);
+        companyController.createCompany(company);
+        companyController.createCompany(company);
+        companyController.createCompany(company);
+        companyController.createCompany(company);
+        companyController.createCompany(company);
         MockHttpServletRequestBuilder request = get("/companies?page=1&size=5")
                 .contentType(MediaType.APPLICATION_JSON);
 
