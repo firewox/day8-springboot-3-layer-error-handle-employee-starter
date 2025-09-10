@@ -150,21 +150,14 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
                 .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
     }
-//
-//    @Test
-//    void should_return_200_with_employee_list() throws Exception {
-//        Employee expect = employeeController.createEmployee(johnSmith());
-//
-//        mockMvc.perform(get("/employees")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{}"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.length()").value(expect.getId()))
-//                .andExpect(jsonPath("$[0].name").value(expect.getName()))
-//                .andExpect(jsonPath("$[0].age").value(expect.getAge()))
-//                .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
-//                .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
-//    }
+
+    @Test
+    void should_status_204_when_delete_employee() throws Exception {
+        Employee johnSmith = createJohnSmith();
+
+        mockMvc.perform(delete("/employees/" + johnSmith.getId()))
+                .andExpect(status().isNoContent());
+    }
 //
 //    @Test
 //    void should_status_204_when_delete_employee() throws Exception {
