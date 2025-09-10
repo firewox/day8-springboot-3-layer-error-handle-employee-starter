@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -67,6 +68,13 @@ public class EmployeeServiceTest {
         employeeService.deleteEmployee(1);
         when(employeeRepository.getEmployeeById(1)).thenReturn(currrentEmployee);
         assertEquals(false, employeeService.getEmployeeById(1).getActive());
+    }
+
+    @Test
+    void should_throw_exception_without_employee_when_delete_an_employee_not_exist() {
+        Employee currrentEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, true);
+        when(employeeRepository.getEmployeeById(1)).thenReturn(currrentEmployee);
+        assertThrows(ResponseStatusException.class, () -> employeeService.deleteEmployee(1));
     }
 
     @Test
