@@ -1,8 +1,6 @@
 package com.example.demo;
 
-import com.example.exception.DeActiveEmployeeException;
 import com.example.exception.InvalidAgeEmployeeException;
-import com.example.repository.EmployeeRepository;
 import com.example.repository.IEmployeeRepository;
 import com.example.service.EmployeeService;
 import org.junit.jupiter.api.Test;
@@ -85,7 +83,6 @@ class EmployeeServiceTest {
 
     @Test
     void should_throw_exception_when_employee_active_status_is_deactive() {
-//        Employee targetEmployee = new Employee(1, "Tom", 30, "gender", 29999.0, false);
         Employee updatedEmployee = new Employee(1, "Tom", 32, "gender", 39999.0, false);
         assertThrows(ResponseStatusException.class, () -> employeeService.updateEmployee(1, updatedEmployee));
     }
