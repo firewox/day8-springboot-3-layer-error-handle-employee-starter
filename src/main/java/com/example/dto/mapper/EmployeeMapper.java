@@ -13,7 +13,11 @@ import java.util.stream.Collectors;
 public class EmployeeMapper {
     public static EmployeeResponse toResponse(Employee employee) {
         EmployeeResponse employeeResponse = new EmployeeResponse();
-        BeanUtils.copyProperties(employee, employeeResponse);
+        employeeResponse.setId(employee.getId());
+        employeeResponse.setAge(employee.getAge());
+        employeeResponse.setName(employee.getName());
+        employeeResponse.setGender(employee.getGender());
+        employeeResponse.setActive(employee.getActive());
         return employeeResponse;
     }
 
@@ -23,12 +27,19 @@ public class EmployeeMapper {
 
     public static Employee toEntity(EmployeeRequest employeeRequest) {
         Employee employee = new Employee();
-        employee.setId(employeeRequest.getId());
+        if (employeeRequest.getId() != null) {
+            employee.setId(employeeRequest.getId());
+        }
         employee.setAge(employeeRequest.getAge());
         employee.setName(employeeRequest.getName());
         employee.setGender(employeeRequest.getGender());
         employee.setSalary(employeeRequest.getSalary());
-        employee.setActive(employeeRequest.getActive());
+        if (employeeRequest.getActive() != null) {
+            employee.setActive(employeeRequest.getActive());
+        }
+        if (employeeRequest.getCompanyId() != null) {
+            employee.setCompanyId(employeeRequest.getCompanyId());
+        }
         return employee;
     }
 }

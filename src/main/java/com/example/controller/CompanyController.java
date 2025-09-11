@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.demo.Company;
 import com.example.dto.CompanyRequest;
+import com.example.dto.CompanyResponse;
 import com.example.dto.mapper.CompanyMapper;
 import com.example.service.CompanyService;
 import org.springframework.http.HttpStatus;
@@ -44,8 +45,8 @@ public class CompanyController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Company getCompanyById(@PathVariable int id) {
-        return this.companyService.getCompanyById(id);
+    public CompanyResponse getCompanyById(@PathVariable int id) {
+        return CompanyMapper.toResponse(this.companyService.getCompanyById(id));
     }
 
     @DeleteMapping("/{id}")
