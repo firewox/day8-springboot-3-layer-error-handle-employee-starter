@@ -27,8 +27,8 @@ public class CompanyController {
     }
 
     @GetMapping
-    public List<Company> getCompanies(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        return this.companyService.getCompanies(page, size);
+    public List<CompanyResponse> getCompanies(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        return CompanyMapper.toResponse(this.companyService.getCompanies(page, size));
     }
 
     @PostMapping
