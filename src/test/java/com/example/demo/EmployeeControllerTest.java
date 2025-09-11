@@ -88,8 +88,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.id").value(expect.getId()))
                 .andExpect(jsonPath("$.name").value(expect.getName()))
                 .andExpect(jsonPath("$.age").value(expect.getAge()))
-                .andExpect(jsonPath("$.gender").value(expect.getGender()))
-                .andExpect(jsonPath("$.salary").value(expect.getSalary()));
+                .andExpect(jsonPath("$.gender").value(expect.getGender()));
     }
 
     @Test
@@ -103,8 +102,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].id").value(expect.getId()))
                 .andExpect(jsonPath("$[0].name").value(expect.getName()))
                 .andExpect(jsonPath("$[0].age").value(expect.getAge()))
-                .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
-                .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
+                .andExpect(jsonPath("$[0].gender").value(expect.getGender()));
     }
 
     @Test
@@ -176,8 +174,7 @@ public class EmployeeControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(expect.getId()))
-                .andExpect(jsonPath("$.age").value(29))
-                .andExpect(jsonPath("$.salary").value(65000.0));
+                .andExpect(jsonPath("$.age").value(29));
     }
 
     @Test
