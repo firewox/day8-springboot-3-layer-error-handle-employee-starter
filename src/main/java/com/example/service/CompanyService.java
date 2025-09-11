@@ -52,6 +52,12 @@ public class CompanyService {
             throw new DeActiveCompanyException("Company was deleted");
         }
         updatedCompany.setId(id);
+        if (updatedCompany.getActive()==null){
+            updatedCompany.setActive(found.getActive());
+        }
+        if (updatedCompany.getEmployees().isEmpty()){
+            updatedCompany.setEmployees(found.getEmployees());
+        }
         return companyRepository.save(updatedCompany);
     }
 

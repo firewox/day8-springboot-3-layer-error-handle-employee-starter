@@ -39,8 +39,8 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Company updateCompany(@PathVariable int id, @RequestBody CompanyRequest updatedCompanyRequest) {
-        return this.companyService.updateCompany(id, CompanyMapper.toEntity(updatedCompanyRequest));
+    public CompanyResponse updateCompany(@PathVariable int id, @RequestBody CompanyRequest updatedCompanyRequest) {
+        return CompanyMapper.toResponse(this.companyService.updateCompany(id, CompanyMapper.toEntity(updatedCompanyRequest)));
     }
 
     @GetMapping("/{id}")
