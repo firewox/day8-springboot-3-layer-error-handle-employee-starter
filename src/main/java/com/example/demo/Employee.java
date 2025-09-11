@@ -43,22 +43,22 @@ public class Employee {
     public Boolean getActive() {
         return active;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public void setName(String name) {
         this.name = name;
     }
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
     public void setGender(String gender) {
         this.gender = gender;
     }
-    public void setSalary(double salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 

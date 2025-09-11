@@ -71,6 +71,7 @@ public class EmployeeService {
             throw new InvalidAgeEmployeeException("Salary must be greater than 20000.0");
         }
         employee.setActive(true);
+        employee.setId(null);
         Employee save = employeeRepository.save(employee);
         return employeeMapper.toResponse(save);
     }

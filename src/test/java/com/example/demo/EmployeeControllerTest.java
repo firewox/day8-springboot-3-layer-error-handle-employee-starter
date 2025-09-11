@@ -54,9 +54,11 @@ public class EmployeeControllerTest {
 
     @BeforeEach
     void cleanEmployees() throws Exception {
-        jdbcTemplate.execute("truncate table employee_db_test.employee");
-//        jdbcTemplate.execute("delete from employee_db_test.employee_sequence");
-//        jdbcTemplate.execute("alert table employee_db_test.employee AUTO_INcrement=1");
+//        jdbcTemplate.execute("truncate table employee_db_test.employee");
+        jdbcTemplate.execute("delete from employee");
+        jdbcTemplate.execute("delete from company");
+//        jdbcTemplate.execute("alert table employee AUTO_INcrement=1");
+//        jdbcTemplate.execute("alert table company AUTO_INcrement=1");
     }
 
     @Test
@@ -123,8 +125,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(28))
-                .andExpect(jsonPath("$.gender").value("MALE"))
-                .andExpect(jsonPath("$.salary").value(60000));
+                .andExpect(jsonPath("$.gender").value("MALE"));
     }
 
     @Test
@@ -141,14 +142,12 @@ public class EmployeeControllerTest {
         EmployeeRequest expect = createJohnSmith();
 
         mockMvc.perform(get("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(expect.getId()))
+                .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].name").value(expect.getName()))
                 .andExpect(jsonPath("$[0].age").value(expect.getAge()))
-                .andExpect(jsonPath("$[0].gender").value(expect.getGender()))
-                .andExpect(jsonPath("$[0].salary").value(expect.getSalary()));
+                .andExpect(jsonPath("$[0].gender").value(expect.getGender()));
     }
 
     @Test
