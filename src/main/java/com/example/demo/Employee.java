@@ -13,6 +13,18 @@ public class Employee {
     private String gender;
     private Double salary;
     private Boolean active;
+
+    @Column(name = "company_id")
+    private Integer companyId;
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
     public Integer getId() {
         return id;
     }

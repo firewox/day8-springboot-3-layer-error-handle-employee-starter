@@ -1,6 +1,9 @@
 package com.example.service;
 
 import com.example.demo.Employee;
+import com.example.dto.EmployeeRequest;
+import com.example.dto.EmployeeResponse;
+import com.example.dto.mapper.EmployeeMapper;
 import com.example.exception.DeActiveEmployeeException;
 import com.example.exception.InvalidAgeEmployeeException;
 import com.example.repository.EmployeeRepository;
@@ -18,13 +21,18 @@ import java.util.Optional;
 @Service
 public class EmployeeService {
     private final IEmployeeRepository employeeRepository;
+    private EmployeeMapper employeeMapper = new EmployeeMapper();
 
-
-    public EmployeeService(IEmployeeRepository employeeRepository) {
+    public EmployeeService(IEmployeeRepository employeeRepository, EmployeeMapper employeeMapper) {
         this.employeeRepository = employeeRepository;
+        this.employeeMapper = employeeMapper;
     }
 
-    public List<Employee> getEmployees(String gender, Integer page, Integer size) {
+    public List<EmployeeResponse> getEmployees(String gender, Integer page, Integer size) {
+        return employeeMapper.toResponse(getEmployeeList(gender, page, size));
+    }
+
+    private List<Employee> getEmployeeList(String gender, Integer page, Integer size) {
         if(gender == null) {
             if (page == null || size == null) {
                 return employeeRepository.findAll();
@@ -43,15 +51,16 @@ public class EmployeeService {
         }
     }
 
-    public Employee getEmployeeById(int id) {
+    public EmployeeResponse getEmployeeById(int id) {
         Optional<Employee> employeeById1 = this.employeeRepository.findById(id);
         if (employeeById1.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
-        return employeeById1.get();
+        return employeeMapper.toResponse(employeeById1.get());
     }
 
-    public Employee createEmployee(Employee employee) {
+    public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
+        Employee employee = employeeMapper.toEntity(employeeRequest);
         if (employee.getAge() == null) {
             throw new InvalidAgeEmployeeException("Age is required");
         } else if (employee.getAge() < 18 || employee.getAge() > 65) {
@@ -62,10 +71,12 @@ public class EmployeeService {
             throw new InvalidAgeEmployeeException("Salary must be greater than 20000.0");
         }
         employee.setActive(true);
-        return employeeRepository.save(employee);
+        Employee save = employeeRepository.save(employee);
+        return employeeMapper.toResponse(save);
     }
 
-    public Employee updateEmployee(int id, Employee updatedEmployee) {
+    public EmployeeResponse updateEmployee(int id, EmployeeRequest updatedEmployeeRequest) {
+        Employee updatedEmployee = employeeMapper.toEntity(updatedEmployeeRequest);
         Optional<Employee> employeeById = employeeRepository.findById(id);
         if (employeeById.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
@@ -75,13 +86,17 @@ public class EmployeeService {
         }
         updatedEmployee.setId(id);
         updatedEmployee.setActive(true);
-        return employeeRepository.save(updatedEmployee);
+        employeeRepository.save(updatedEmployee);
+        return employeeMapper.toResponse(employeeRepository.findById(id).get());
     }
 
     public void deleteEmployee(int id) {
-        Employee employeeById = getEmployeeById(id);
-        employeeById.setActive(false);
-        this.employeeRepository.save(employeeById);
+        Optional<Employee> employeeById = this.employeeRepository.findById(id);
+        if (employeeById.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
+        }
+        employeeById.get().setActive(false);
+        this.employeeRepository.save(employeeById.get());
     }
 
     public void empty() {

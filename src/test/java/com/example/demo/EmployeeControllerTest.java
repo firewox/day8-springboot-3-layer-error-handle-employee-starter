@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.dto.EmployeeRequest;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,24 +32,23 @@ public class EmployeeControllerTest {
 //        return e;
 //    }
 
-    private Employee createJohnSmith() throws Exception {
+    private EmployeeRequest createJohnSmith() throws Exception {
         Gson gson = new Gson();
-        Employee john = new Employee(null, "John Smith", 28, "MALE", 60000.0);
+        EmployeeRequest john = new EmployeeRequest(1, "John Smith", 28, "MALE", 60000.0, true);
         String johnString = gson.toJson(john).toString();
-
         String contentAsString = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON).content(johnString)).andReturn().getResponse().getContentAsString();
-        john.setId(gson.fromJson(contentAsString, Employee.class).getId());
+        john.setId(gson.fromJson(contentAsString, EmployeeRequest.class).getId());
         return john;
     }
 
-    private Employee createJaneDoe() throws Exception {
+    private EmployeeRequest createJaneDoe() throws Exception {
         Gson gson = new Gson();
-        Employee jane = new Employee(null, "Jane Doe", 22, "FEMALE", 60000.0);
+        EmployeeRequest jane = new EmployeeRequest(1, "Jane Doe", 22, "FEMALE", 60000.0,true);
         String janeString = gson.toJson(jane).toString();
         String contentAsStringJane = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON).content(janeString)).andReturn().getResponse().getContentAsString();
-        jane.setId(gson.fromJson(contentAsStringJane, Employee.class).getId());
+        jane.setId(gson.fromJson(contentAsStringJane, EmployeeRequest.class).getId());
         return jane;
     }
 
@@ -78,7 +78,7 @@ public class EmployeeControllerTest {
 
     @Test
     void should_return_employee_when_employee_found() throws Exception {
-        Employee expect = createJohnSmith();
+        EmployeeRequest expect = createJohnSmith();
 
         mockMvc.perform(get("/employees/" + expect.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -92,8 +92,8 @@ public class EmployeeControllerTest {
 
     @Test
     void should_return_male_employee_when_employee_found() throws Exception {
-        Employee expect = createJohnSmith();
-        Employee janeDoe = createJaneDoe();
+        EmployeeRequest expect = createJohnSmith();
+        EmployeeRequest janeDoe = createJaneDoe();
 
         mockMvc.perform(get("/employees?gender=male")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -138,7 +138,7 @@ public class EmployeeControllerTest {
 
     @Test
     void should_return_200_with_employee_list() throws Exception {
-        Employee expect = createJohnSmith();
+        EmployeeRequest expect = createJohnSmith();
 
         mockMvc.perform(get("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -153,7 +153,7 @@ public class EmployeeControllerTest {
 
     @Test
     void should_status_204_when_delete_employee() throws Exception {
-        Employee johnSmith = createJohnSmith();
+        EmployeeRequest johnSmith = createJohnSmith();
 
         mockMvc.perform(delete("/employees/" + johnSmith.getId()))
                 .andExpect(status().isNoContent());
@@ -161,7 +161,7 @@ public class EmployeeControllerTest {
 
     @Test
     void should_status_200_when_update_employee() throws Exception {
-        Employee expect = createJohnSmith();
+        EmployeeRequest expect = createJohnSmith();
         String requestBody = """
                             {
                                 "name": "John Smith",
@@ -234,7 +234,7 @@ public class EmployeeControllerTest {
                                 "salary": 65000.0
                             }
                     """;
-        Employee johnSmith = createJohnSmith();
+        EmployeeRequest johnSmith = createJohnSmith();
         mockMvc.perform(delete("/employees/" + johnSmith.getId()));
         mockMvc.perform(put("/employees/"+johnSmith.getId())
                 .contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isBadGateway());

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -24,9 +25,12 @@ public class CompanyControllerTest {
     @Autowired
     private CompanyController companyController;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void cleanCompanies() {
-        companyController.empty();
+        jdbcTemplate.execute("truncate table employee_db_test.company");
     }
 
     private Company createDefaultCompany() throws Exception {
@@ -107,13 +111,13 @@ public class CompanyControllerTest {
     @Test
     void should_return_truncated_companies_when_page_size_is_limit() throws Exception {
         Company company = createDefaultCompany();
-        companyController.createCompany(company);
-        companyController.createCompany(company);
-        companyController.createCompany(company);
-        companyController.createCompany(company);
-        companyController.createCompany(company);
-        companyController.createCompany(company);
-        companyController.createCompany(company);
+        createDefaultCompany();
+        createDefaultCompany();
+        createDefaultCompany();
+        createDefaultCompany();
+        createDefaultCompany();
+        createDefaultCompany();
+        createDefaultCompany();
         MockHttpServletRequestBuilder request = get("/companies?page=1&size=5")
                 .contentType(MediaType.APPLICATION_JSON);
 
