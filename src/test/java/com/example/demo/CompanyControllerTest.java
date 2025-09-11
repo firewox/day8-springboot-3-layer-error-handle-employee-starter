@@ -30,7 +30,8 @@ public class CompanyControllerTest {
 
     @BeforeEach
     void cleanCompanies() {
-        jdbcTemplate.execute("truncate table employee_db_test.company");
+        jdbcTemplate.execute("delete from employee_db_test.employee");
+        jdbcTemplate.execute("delete from employee_db_test.company");
     }
 
     private Company createDefaultCompany() throws Exception {

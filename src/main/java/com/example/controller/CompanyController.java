@@ -1,12 +1,12 @@
 package com.example.controller;
 
 import com.example.demo.Company;
+import com.example.dto.CompanyRequest;
+import com.example.dto.mapper.CompanyMapper;
 import com.example.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,8 +32,8 @@ public class CompanyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Company createCompany(@RequestBody Company company) {
-        return this.companyService.createCompany(company);
+    public Company createCompany(@RequestBody CompanyRequest companyRequest) {
+        return this.companyService.createCompany(CompanyMapper.toEntity(companyRequest));
     }
 
     @PutMapping("/{id}")
