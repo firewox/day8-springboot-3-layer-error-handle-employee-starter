@@ -55,8 +55,8 @@ public class EmployeeControllerTest {
     @BeforeEach
     void cleanEmployees() throws Exception {
         jdbcTemplate.execute("truncate table employee_db_test.employee");
-        jdbcTemplate.execute("delete from employee_db_test.employee_sequence");
-        jdbcTemplate.execute("alert table employee_db_test.employee AUTO_INcrement=1");
+//        jdbcTemplate.execute("delete from employee_db_test.employee_sequence");
+//        jdbcTemplate.execute("alert table employee_db_test.employee AUTO_INcrement=1");
     }
 
     @Test
