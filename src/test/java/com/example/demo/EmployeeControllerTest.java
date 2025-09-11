@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,6 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EmployeeControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
 //    private static Employee employee(String name, int age, String gender, double salary) {
 //        Employee e = new Employee();
@@ -43,8 +46,6 @@ public class EmployeeControllerTest {
         Gson gson = new Gson();
         Employee jane = new Employee(null, "Jane Doe", 22, "FEMALE", 60000.0);
         String janeString = gson.toJson(jane).toString();
-        mockMvc.perform(post("/employees")
-                .contentType(MediaType.APPLICATION_JSON).content(janeString)).andReturn().getResponse().getContentAsString();
         String contentAsStringJane = mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON).content(janeString)).andReturn().getResponse().getContentAsString();
         jane.setId(gson.fromJson(contentAsStringJane, Employee.class).getId());
@@ -53,8 +54,9 @@ public class EmployeeControllerTest {
 
     @BeforeEach
     void cleanEmployees() throws Exception {
-        mockMvc.perform(delete("/employees/all")
-                .contentType(MediaType.APPLICATION_JSON));
+        jdbcTemplate.execute("truncate table employee_db_test.employee");
+        jdbcTemplate.execute("delete from employee_db_test.employee_sequence");
+        jdbcTemplate.execute("alert table employee_db_test.employee AUTO_INcrement=1");
     }
 
     @Test
